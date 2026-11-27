@@ -9,7 +9,7 @@
 <p align="center">Windows 单文件 · 每天或每周自动导出 · 离线汇总 · © 2026 ShepiTT · <a href="#许可与版权">禁止商业用途</a></p>
 
 <p align="center">
-  <a href="https://github.com/ShepiTT/srm-report-exporter/releases/latest">下载最新版</a> ·
+  <a href="https://github.com/ShepiTT/SRM-report-exporter/releases/latest">下载最新版</a> ·
   <a href="#软件界面">看界面</a> ·
   <a href="#导出示例">看导出示例</a> ·
   <a href="#使用">本地运行</a> ·
