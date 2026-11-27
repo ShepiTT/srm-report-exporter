@@ -37,6 +37,22 @@ Windows 桌面工具，可按日期导出扣款明细和客诉账单，并把导
 
 口径：同一扣款单号出现在多个文件时，优先保留「已确认」的版本，其次保留最后修改时间最晚的版本。作废单据不计入。导出区间之间缺的日期会在报告顶部提示。读取过的文件缓存在 `%LOCALAPPDATA%\SrmReportExporterPortable\summary_cache`，文件变化后会重新读取。
 
+## 导出示例
+
+以下预览由程序使用虚构数据生成。
+
+### 扣款明细
+
+![扣款明细导出示例](docs/export-deductions.png)
+
+### 客诉账单
+
+![客诉账单导出示例](docs/export-complaints.png)
+
+### 汇总分析网页
+
+![扣款汇总分析网页示例](docs/export-summary.png)
+
 ## 本机汇总参数
 
 汇总可直接使用。若需要补充品牌、仓库归属、卸货费按件换算或预警起始日期，可在 `%LOCALAPPDATA%\SrmReportExporterPortable\summary_options.json` 中填写以下可选项目。
