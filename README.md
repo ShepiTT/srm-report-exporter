@@ -1,6 +1,38 @@
-# SRM 扣款与客诉导出
+<p align="center">
+  <img src="docs/report-icon.png" width="88" height="88" alt="">
+</p>
 
-Windows 桌面工具，可按日期导出扣款明细和客诉账单，并把导出的扣款明细合并成一份汇总分析网页。程序通过已授权的账号读取配置站点的数据，所有文件都在本机生成。
+<h1 align="center">SRM 扣款与客诉导出</h1>
+
+<p align="center">按日期导出扣款明细和客诉账单，生成可离线打开的汇总报告。</p>
+
+<p align="center">Windows 单文件 · 每天或每周自动导出 · 离线汇总</p>
+
+<p align="center">
+  <a href="https://github.com/ShepiTT/srm-report-exporter/releases/latest">下载最新版</a> ·
+  <a href="#软件界面">看界面</a> ·
+  <a href="#导出示例">看导出示例</a> ·
+  <a href="#使用">本地运行</a> ·
+  <a href="#隐私">隐私</a>
+</p>
+
+<p align="center">
+  <img src="docs/export-summary.png" width="1040" alt="扣款汇总分析网页示例（虚构数据）">
+</p>
+
+<p align="center"><sub>汇总分析网页示例 · 虚构数据</sub></p>
+
+## 导出示例
+
+下面是两种 Excel 的导出示例。三张预览均使用虚构数据，也可以单独查看[汇总网页大图](docs/export-summary.png)。
+
+### 扣款明细
+
+![扣款明细导出示例](docs/export-deductions.png)
+
+### 客诉账单
+
+![客诉账单导出示例](docs/export-complaints.png)
 
 ## 软件界面
 
@@ -20,8 +52,6 @@ Windows 桌面工具，可按日期导出扣款明细和客诉账单，并把导
 
 扣款明细包含客诉扣款。客诉账单单独列出这部分数据。程序使用要求扣款日期，缺失时使用创建日期。源系统未提供的客诉字段留空，具体字段见账单中的「抓取说明」。
 
-站点设置和加密的登录信息保存在本机 `%LOCALAPPDATA%\SrmReportExporterPortable`。按公司要求保管导出的 Excel 和汇总网页。
-
 ## 汇总分析
 
 汇总读取保存目录这一层以「扣款明细」开头的 Excel，合并后按扣款单号去重，生成 `扣款汇总分析.html`。这份单文件报告可以离线打开、打印或存为 PDF。用「选文件…」汇总其他位置的文件时，报告保存为 `扣款汇总分析_所选文件.html`，不会覆盖保存目录的报告。
@@ -37,22 +67,6 @@ Windows 桌面工具，可按日期导出扣款明细和客诉账单，并把导
 
 口径：同一扣款单号出现在多个文件时，优先保留「已确认」的版本，其次保留最后修改时间最晚的版本。作废单据不计入。导出区间之间缺的日期会在报告顶部提示。读取过的文件缓存在 `%LOCALAPPDATA%\SrmReportExporterPortable\summary_cache`，文件变化后会重新读取。
 
-## 导出示例
-
-以下预览由程序使用虚构数据生成。
-
-### 扣款明细
-
-![扣款明细导出示例](docs/export-deductions.png)
-
-### 客诉账单
-
-![客诉账单导出示例](docs/export-complaints.png)
-
-### 汇总分析网页
-
-![扣款汇总分析网页示例](docs/export-summary.png)
-
 ## 本机汇总参数
 
 汇总可直接使用。若需要补充品牌、仓库归属、卸货费按件换算或预警起始日期，可在 `%LOCALAPPDATA%\SrmReportExporterPortable\summary_options.json` 中填写以下可选项目。
@@ -67,6 +81,10 @@ Windows 桌面工具，可按日期导出扣款明细和客诉账单，并把导
 ```
 
 `brand_prefixes` 将门店名的前缀对应到显示品牌，`warehouse_org_locations` 将组织编码前缀对应到 `["地点", "省份"]`。`yuan_per_piece` 填每件人民币金额，`chain_start` 用 `YYYY-MM-DD`。本机参数与报表会留在当前电脑。
+
+## 隐私
+
+程序通过已授权的账号读取设置的站点。站点设置和加密的登录信息保存在本机 `%LOCALAPPDATA%\SrmReportExporterPortable`，Excel 和汇总网页也在本机生成和保存。
 
 ## 构建
 
