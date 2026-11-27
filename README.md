@@ -2,6 +2,12 @@
 
 Windows 桌面工具，可按日期导出扣款明细和客诉账单。程序通过已授权的账号读取配置站点的数据，并在本机生成 Excel。
 
+## 软件界面
+
+![扣款与客诉导出软件界面](docs/screenshot.png)
+
+本机版界面示例。GitHub 版在顶部提供「站点设置」。
+
 ## 使用
 
 1. 从 Releases 下载 `SRMReportExporter.exe`，移到长期使用的目录，然后双击打开。登录使用已安装的 Microsoft Edge。
