@@ -14,11 +14,14 @@ from typing import Callable
 from app_auth import AuthError, SessionExpired, get_session
 from export_engine import ExportError, export_reports
 from site_profile import load_site_profile
+from summary_options import load_summary_options
+from summary_report import REPORT_NAME, SummaryError, build_summary, find_sources
 
 
 APP_NAME = "SRM 扣款与客诉导出"
 APP_DATA = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local")) / "SrmReportExporterPortable"
 DEFAULT_OUTPUT = Path.home() / "Documents" / "SRM报表"
+PICKED_REPORT_NAME = "扣款汇总分析_所选文件.html"
 
 
 @dataclass(frozen=True)
@@ -30,13 +33,15 @@ class Settings:
     frequency: str = "daily"
     time_hhmm: str = "08:30"
     weekday: int = 0
+    summary_after_export: bool = True
 
     def validate(self) -> None:
         if not isinstance(self.output_dir, str) or not self.output_dir.strip():
             raise ValueError("请选择报表保存位置。")
         if not Path(self.output_dir).is_absolute():
             raise ValueError("请选择完整的报表保存路径。")
-        if not all(type(value) is bool for value in (self.deduct, self.complaints, self.schedule_enabled)):
+        if not all(type(value) is bool for value in (self.deduct, self.complaints, self.schedule_enabled,
+                                                       self.summary_after_export)):
             raise ValueError("报表或定时设置格式有误。")
         if not (self.deduct or self.complaints):
             raise ValueError("请至少勾选一种报表。")
@@ -119,7 +124,7 @@ def open_run_log() -> logging.Logger:
 
 
 def public_error(error: Exception) -> str:
-    if isinstance(error, (AuthError, ExportError, RunBusy, ValueError)) or type(error) is RuntimeError:
+    if isinstance(error, (AuthError, ExportError, RunBusy, SummaryError, ValueError)) or type(error) is RuntimeError:
         return str(error)
     if isinstance(error, PermissionError):
         return "无法写入文件。请确认目录可写，并关闭可能占用报表的 Excel 窗口。"
@@ -141,16 +146,48 @@ def run_export(settings: Settings, start: date, end: date, report: Callable[[str
         for refresh in (False, True):
             session = get_session(APP_DATA, refresh=refresh, scheduled=scheduled, profile=profile)
             try:
-                return export_reports(
+                result = export_reports(
                     session, start, end, output, APP_DATA,
                     deduct=settings.deduct, complaints=settings.complaints, progress=report,
                 )
+                break
             except SessionExpired:
                 if refresh:
                     raise
                 report("SRM 会话已过期，正在重新登录后重试。")
             finally:
                 session.close()
+        if settings.summary_after_export and settings.deduct:
+            try:
+                summary = _summarize(output, None, report)
+                report(f"已更新汇总报告 {summary.path.name}")
+            except Exception as error:  # 汇总失败不影响已经导出的 Excel
+                report(f"汇总报告没有更新：{public_error(error)}")
+        return result
+
+
+def _summarize(folder: Path, files, report: Callable[[str], None]):
+    if files:
+        sources, target = [Path(path) for path in files], folder / PICKED_REPORT_NAME
+    else:
+        sources, target = find_sources(folder), folder / REPORT_NAME
+        if not sources:
+            raise SummaryError("保存目录里还没有扣款明细。请先导出扣款明细，或选择要汇总的文件。")
+    try:
+        options = load_summary_options(APP_DATA)
+    except ValueError as error:
+        raise SummaryError(str(error)) from None
+    return build_summary(sources, target, cache_dir=APP_DATA / "summary_cache", progress=report, options=options)
+
+
+def run_summary(settings: Settings, report: Callable[[str], None], files=None):
+    """合并保存目录里的扣款明细（或所选文件），生成汇总网页。"""
+    folder = Path(settings.output_dir)
+    if not settings.output_dir.strip() or not folder.is_absolute():
+        raise ValueError("请先选择报表保存位置。")
+    with run_lock():
+        folder.mkdir(exist_ok=True, parents=True)
+        return _summarize(folder, files, report)
 
 
 def run_scheduled() -> int:

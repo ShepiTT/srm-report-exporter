@@ -23,3 +23,6 @@ logs/
 site.json
 settings.json
 state.json
+summary_options.json
+summary_cache/
+扣款汇总分析*.html
