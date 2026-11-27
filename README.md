@@ -4,7 +4,7 @@
 
 <h1 align="center">SRM 扣款与客诉导出</h1>
 
-<p align="center">按日期导出扣款明细和客诉账单，生成可离线打开的汇总报告。</p>
+<p align="center">主要面向鸣鸣很忙 SRM，支持按日期导出扣款明细和客诉账单，并生成可离线打开的汇总报告。</p>
 
 <p align="center">Windows 单文件 · 每天或每周自动导出 · 离线汇总</p>
 
