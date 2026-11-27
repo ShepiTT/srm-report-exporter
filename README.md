@@ -6,7 +6,7 @@
 
 <p align="center">主要面向鸣鸣很忙 SRM，支持按日期导出扣款明细和客诉账单，并生成可离线打开的汇总报告。</p>
 
-<p align="center">Windows 单文件 · 每天或每周自动导出 · 离线汇总</p>
+<p align="center">Windows 单文件 · 每天或每周自动导出 · 离线汇总 · © 2026 ShepiTT · <a href="#许可与版权">禁止商业用途</a></p>
 
 <p align="center">
   <a href="https://github.com/ShepiTT/srm-report-exporter/releases/latest">下载最新版</a> ·
@@ -85,6 +85,12 @@
 ## 隐私
 
 程序通过已授权的账号读取设置的站点。站点设置和加密的登录信息保存在本机 `%LOCALAPPDATA%\SrmReportExporterPortable`，Excel 和汇总网页也在本机生成和保存。
+
+## 许可与版权
+
+© 2026 ShepiTT。本项目的自有代码和程序采用 [PolyForm Noncommercial 1.0.0](LICENSE)，仅授权非商业用途。商业使用须事先获得版权所有者许可。
+
+再分发时请随附许可证和[版权声明](NOTICE)。第三方组件适用各自的许可，详见发布页随附的 `THIRD_PARTY_NOTICES.zip`。
 
 ## 构建
 
