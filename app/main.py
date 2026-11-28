@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 import sys
 import tkinter as tk
@@ -697,9 +698,27 @@ class ExportApp:
             self.window.destroy()
 
 
+def show_web_ui() -> bool:
+    """优先用 WebView2 显示新界面。这台电脑用不了时返回 False，改用下面的 tkinter 界面。"""
+    try:
+        import web_app
+
+        return web_app.run()
+    except Exception:
+        logger = open_run_log()
+        logger.exception("新界面启动失败，已改用旧界面。")
+        for handler in logger.handlers:
+            handler.close()
+        return False
+
+
 def main() -> int:
     if sys.argv[1:] == ["--scheduled"]:
         return run_scheduled()
+    if "--classic" not in sys.argv[1:] and show_web_ui():
+        # pywebview 的回调线程不是守护线程，窗口关掉后可能还在等页面应答，所以直接结束进程
+        logging.shutdown()
+        os._exit(0)
     ui.enable_dpi_awareness()
     window = tk.Tk()
     ExportApp(window)

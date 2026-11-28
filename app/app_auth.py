@@ -158,6 +158,19 @@ def clear_session(data_dir: Path) -> None:
     _delete_protected(Path(data_dir) / SESSION_FILE)
 
 
+def has_session(data_dir: Path) -> bool:
+    """Return whether the saved browser sign-in for the current site is still valid."""
+    data_dir = Path(data_dir)
+    try:
+        state = _read_protected(data_dir / SESSION_FILE)
+        if not state:
+            return False
+        SrmSession(state, origin=load_site_profile(data_dir).srm_origin).close()
+    except (AuthError, ValueError):
+        return False
+    return True
+
+
 def _unwrap(value: str) -> str:
     try:
         decoded = json.loads(value)

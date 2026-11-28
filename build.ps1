@@ -4,8 +4,9 @@ $ErrorActionPreference = 'Stop'
 Push-Location -LiteralPath $PSScriptRoot
 try {
     $icon = (Resolve-Path -LiteralPath './app/report.ico').Path
+    $web = (Resolve-Path -LiteralPath './app/web').Path
     & $Python -m PyInstaller --noconfirm --onefile --windowed --name SRMReportExporter `
-        --icon $icon --add-data ('{0}:.' -f $icon) --collect-data playwright `
+        --icon $icon --add-data ('{0}:.' -f $icon) --add-data ('{0}:web' -f $web) --collect-data playwright `
         --exclude-module numpy --exclude-module pandas `
         --workpath './build/package' --specpath './build' --distpath './dist' './app/main.py'
     if ($LASTEXITCODE -ne 0) {

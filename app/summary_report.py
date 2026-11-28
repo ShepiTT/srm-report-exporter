@@ -715,6 +715,42 @@ def analyze(records: dict, details: dict, sources_meta: list[dict], *, today: da
 
 # ---------------------------------------------------------------- 入口
 
+def read_overview(path) -> dict | None:
+    """从已生成的汇总网页读出主窗口卡片显示的几个数。文件缺失或格式不对时返回 None。"""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+    marker = "const D="
+    start = text.find(marker)
+    if start < 0:
+        return None
+    try:
+        data, _end = json.JSONDecoder().raw_decode(text, start + len(marker))
+    except ValueError:
+        return None
+    if not isinstance(data, dict):
+        return None
+    confirm = data.get("confirm") if isinstance(data.get("confirm"), dict) else {}
+    totals = data.get("totals") if isinstance(data.get("totals"), dict) else {}
+
+    def count(value):
+        return value if type(value) is int and value >= 0 else None
+
+    def label(value):
+        return value if isinstance(value, str) else ""
+
+    return {
+        "generated": label(data.get("generated")), "today": label(data.get("today")),
+        "first": label(data.get("first")), "last": label(data.get("last")),
+        "files": len(data["sources"]) if isinstance(data.get("sources"), list) else None,
+        "documents": count(totals.get("n")),
+        "pending": count(confirm.get("pending_n")), "key": count(confirm.get("key_n")),
+        "due_today": count(confirm.get("due_today")), "overdue": count(confirm.get("overdue")),
+        "watch": len(data["watch"]) if isinstance(data.get("watch"), list) else None,
+    }
+
+
 def build_summary(paths: Iterable[Path], out_path: Path, *, cache_dir: Path | None = None,
                   progress: Callable[[str], None] = lambda _message: None,
                   today: date | None = None, options: SummaryOptions | None = None) -> SummaryResult:

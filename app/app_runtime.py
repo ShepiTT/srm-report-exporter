@@ -13,9 +13,10 @@ from typing import Callable
 
 from app_auth import AuthError, SessionExpired, get_session
 from export_engine import ExportError, export_reports
+from run_history import RunRecorder, period_label
 from site_profile import load_site_profile
 from summary_options import load_summary_options
-from summary_report import REPORT_NAME, SummaryError, build_summary, find_sources
+from summary_report import REPORT_NAME, SummaryError, SummaryResult, build_summary, find_sources
 
 
 APP_NAME = "SRM 扣款与客诉导出"
@@ -133,7 +134,24 @@ def public_error(error: Exception) -> str:
     return f"操作失败（{type(error).__name__}）。请检查网络与系统状态后重试。"
 
 
-def run_export(settings: Settings, start: date, end: date, report: Callable[[str], None], *, scheduled=False):
+@dataclass(frozen=True)
+class ExportOutcome:
+    files: tuple[Path, ...]
+    warnings: tuple[str, ...]
+    summary: SummaryResult | None = None   # 导出后自动更新的汇总
+    summary_error: str | None = None
+
+
+def export_message(outcome: ExportOutcome) -> str:
+    text = f"已生成 {len(outcome.files)} 份报表"
+    if outcome.summary:
+        return text + "，汇总已更新"
+    return text + "，汇总没有更新" if outcome.summary_error else text
+
+
+def run_export(settings: Settings, start: date, end: date, report: Callable[[str], None], *,
+               scheduled=False, saved: Callable | None = None) -> ExportOutcome:
+    """导出所选报表；勾了「导出后自动更新汇总」时接着更新汇总。saved 在 Excel 写好、更新汇总之前调用。"""
     settings.validate()
     if start > end:
         raise ValueError("开始日期不能晚于结束日期。")
@@ -157,13 +175,17 @@ def run_export(settings: Settings, start: date, end: date, report: Callable[[str
                 report("SRM 会话已过期，正在重新登录后重试。")
             finally:
                 session.close()
+        if saved:
+            saved(result)
+        summary = summary_error = None
         if settings.summary_after_export and settings.deduct:
             try:
                 summary = _summarize(output, None, report)
                 report(f"已更新汇总报告 {summary.path.name}")
             except Exception as error:  # 汇总失败不影响已经导出的 Excel
-                report(f"汇总报告没有更新：{public_error(error)}")
-        return result
+                summary_error = public_error(error)
+                report(f"汇总报告没有更新：{summary_error}")
+        return ExportOutcome(result.files, result.warnings, summary, summary_error)
 
 
 def _summarize(folder: Path, files, report: Callable[[str], None]):
@@ -192,20 +214,35 @@ def run_summary(settings: Settings, report: Callable[[str], None], files=None):
 
 def run_scheduled() -> int:
     logger = open_run_log()
+    recorder = None
     try:
         settings = load_settings()
         if not settings.schedule_enabled:
             logger.info("自动导出未启用。")
             return 0
-        result = run_export(settings, *completed_period(settings.frequency), logger.info, scheduled=True)
-        for warning in result.warnings:
-            logger.warning(warning)
-        for path in result.files:
-            logger.info("已保存 %s", path)
+        start, end = completed_period(settings.frequency)
+        recorder = RunRecorder(APP_DATA, "scheduled", "自动导出", period_label(start, end))
+
+        def report(line):
+            logger.info(line)
+            recorder.add(line)
+
+        def saved(exported):
+            for warning in exported.warnings:
+                logger.warning(warning)
+                recorder.add(warning, "warn")
+            for path in exported.files:
+                logger.info("已保存 %s", path)
+                recorder.add(f"已保存 {path.name}")
+
+        result = run_export(settings, start, end, report, scheduled=True, saved=saved)
         logger.info("自动导出完成。")
+        recorder.finish(True, export_message(result))
         return 0
     except Exception as error:
         logger.error("自动导出失败。%s", public_error(error))
+        if recorder:
+            recorder.finish(False, public_error(error))
         return 1
     finally:
         for handler in logger.handlers:

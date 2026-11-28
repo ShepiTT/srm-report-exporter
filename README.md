@@ -9,7 +9,7 @@
 <p align="center">Windows 单文件 · 每天或每周自动导出 · 离线汇总 · © 2026 ShepiTT · <a href="#许可与版权">禁止商业用途</a></p>
 
 <p align="center">
-  <a href="https://github.com/ShepiTT/SRM-report-exporter/releases/latest">下载最新版</a> ·
+  <a href="https://github.com/ShepiTT/SRM-report-exporter/releases/tag/v1.2.0-beta.1">下载 WebView2 预览版</a> · <a href="https://github.com/ShepiTT/SRM-report-exporter/releases/latest">下载稳定版</a> ·
   <a href="#软件界面">看界面</a> ·
   <a href="#导出示例">看导出示例</a> ·
   <a href="#使用">本地运行</a> ·
@@ -36,17 +36,19 @@
 
 ## 软件界面
 
-![扣款与客诉导出软件界面](docs/screenshot.png)
+![扣款与客诉导出软件界面（虚构数据）](docs/screenshot.png)
 
-界面采用圆角卡片布局，支持 Windows 高分屏。右上角的标签显示站点和登录状态，点击即可打开对应设置。
+界面用 Microsoft Edge WebView2 显示，跟随 Windows 的浅色或深色模式。右上角的标签显示站点和登录状态，点击即可修改。汇总卡片直接列出待确认、今天到期和观察清单的单据数。右侧的运行记录按次列出手动导出、定时导出和生成汇总的过程。
+
+没有 WebView2 运行时的电脑会自动改用旧版界面，功能相同。在命令行加 `--classic` 参数也可以直接打开旧版界面。
 
 ## 使用
 
 1. 从 Releases 下载 `SRMReportExporter.exe`，移到长期使用的目录，然后双击打开。登录使用已安装的 Microsoft Edge。
 2. 点击右上角 **站点** 标签，填入管理员提供的 SRM HTTPS 地址。客诉地址用于补充详情。客诉模板编号可留空，程序会识别名称以「消费者索赔」开头的模板。
 3. 点击右上角 **登录** 标签。手动导出可在 Edge 完成登录。需要定时运行时，可用当前 Windows 用户加密保存 SRM 凭据。
-4. 选择报表和保存目录。手动导出可用「昨天 / 近 7 天 / 本月 / 上月」快速填日期；自动导出选择每天或每周的运行时间。
-5. 在 **汇总分析** 点「生成汇总」，完成后会自动在浏览器中打开。勾选「导出后自动更新汇总」后，手动或定时任务成功导出扣款明细时，都会触发汇总更新。
+4. 选择报表和保存目录。选择会立即保存，定时任务也按这里的报表和目录导出。手动导出可用「昨天 / 近 7 天 / 本月 / 上月」快速填日期。自动导出选好每天或每周的运行时间，再打开开关；已启用时改了时间，点「保存」更新任务。
+5. 在 **汇总分析** 点「生成汇总」，完成后会自动在浏览器中打开。打开「导出后自动更新」后，手动或定时任务成功导出扣款明细时，都会更新汇总。
 
 每天导出昨天的数据。每周导出运行日前连续 7 天的数据。定时运行使用 Windows 任务计划，电脑需开机联网且当前 Windows 用户保持登录。
 
@@ -84,7 +86,7 @@
 
 ## 隐私
 
-程序通过已授权的账号读取设置的站点。站点设置和加密的登录信息保存在本机 `%LOCALAPPDATA%\SrmReportExporterPortable`，Excel 和汇总网页也在本机生成和保存。
+程序通过已授权的账号读取设置的站点。站点设置、加密的登录信息、运行记录和日志保存在本机 `%LOCALAPPDATA%\SrmReportExporterPortable`，Excel 和汇总网页也在本机生成和保存。
 
 ## 许可与版权
 
@@ -94,7 +96,7 @@
 
 ## 构建
 
-使用 Windows x64、Python 3.13 和 Microsoft Edge。
+使用 Windows x64、Python 3.13 和 Microsoft Edge。界面用到的 pywebview 和 pythonnet 会打包进 EXE；运行时需要 Microsoft Edge WebView2 运行时，Windows 11 已自带。
 
 ```powershell
 python -m venv .venv
