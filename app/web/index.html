@@ -9,7 +9,7 @@
 :root{
   --bg:#f3f4f6;--surface:#ffffff;--surface-2:#f8f9fa;--sunken:#eef0f3;--hover:#f2f3f5;
   --line:#e3e5e9;--line-2:#d3d6dc;
-  --ink:#111318;--ink-2:#434852;--muted:#6a707b;--faint:#a1a6af;
+  --ink:#111318;--ink-2:#3f444e;--muted:#5c626d;--faint:#8f959e;
   --primary:#15171c;--primary-hover:#2c2f37;--on-primary:#ffffff;
   --brand:#10a572;--brand-strong:#047857;--brand-tint:#e9f7f0;--brand-line:#9fd9c0;--on-brand:#ffffff;
   --warn:#b45309;--warn-dot:#f59e0b;
@@ -39,7 +39,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
 html,body{height:100%}
-body{font:14px/1.5 var(--font);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow:hidden;user-select:none;min-width:960px}
+body{font:14px/1.5 var(--font);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:auto;overflow-y:hidden;user-select:none;min-width:1000px}
 button,input{font:inherit;color:inherit;border:0;background:none;outline:0}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:6px}
@@ -53,7 +53,7 @@ button{cursor:pointer}
 ::-webkit-scrollbar-thumb:hover{background-color:var(--faint)}
 
 /* ---------- 框架 ---------- */
-.app{display:grid;grid-template-columns:minmax(0,1fr) 320px;grid-template-rows:60px minmax(0,1fr);gap:0 16px;height:100vh;padding:0 20px 20px}
+.app{display:grid;grid-template-columns:minmax(0,1fr) 320px;grid-template-rows:60px minmax(0,1fr);gap:0 16px;height:100%;padding:0 20px 20px}
 .topbar{grid-column:1/-1;display:flex;align-items:center;gap:12px}
 .logo{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(155deg,#22c58c,#08875c);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 1px 2px rgba(8,135,92,.35)}
 .logo .i{width:18px;height:18px;stroke:#fff;stroke-width:2.5}
@@ -64,7 +64,7 @@ button{cursor:pointer}
 .chip.ok .dot{background:var(--brand);box-shadow:0 0 0 3px var(--brand-tint)}
 .chip.warn .dot{background:var(--warn-dot)}
 .chip .i{width:14px;height:14px;color:var(--faint)}
-.main{display:flex;flex-direction:column;gap:16px;min-width:0;min-height:0;overflow:auto;margin:-2px;padding:2px}
+.main{display:flex;flex-direction:column;gap:16px;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;margin:-2px;padding:2px}
 .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;flex:1 0 auto}
 
 /* ---------- 卡片 ---------- */
@@ -143,7 +143,7 @@ button{cursor:pointer}
 .switch.sm{width:32px;height:18px;margin:0}
 .switch.sm::after{width:14px;height:14px}
 .switch.sm[aria-checked=true]::after{transform:translateX(14px)}
-.sw-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.sw-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);cursor:pointer;white-space:nowrap;min-width:0}
 .spin{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 body.busy [data-lock]{pointer-events:none;opacity:.45}
@@ -162,13 +162,13 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
 .k{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
 .v{font-size:22px;line-height:30px;font-weight:600;letter-spacing:-.01em}
 .kv .v{font-size:15px;line-height:24px;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.s{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s.warn{color:var(--warn);display:flex;align-items:center;gap:4px}
 .s.warn .i{width:13px;height:13px;stroke-width:2}
 .sdot{width:6px;height:6px;border-radius:50%;background:var(--warn-dot)}
 .okc{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-strong)}
 .okc .i{width:10px;height:10px;stroke-width:3}
-.meta{font-size:12px;color:var(--muted)}
+.meta{font-size:12.5px;color:var(--muted)}
 .note{flex:1;display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);min-width:0}
 .note .i{width:15px;height:15px}
 .dirty{flex:1;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
@@ -178,13 +178,13 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
 .activity{min-height:0;overflow:hidden}
 .act-h{display:flex;align-items:center;gap:10px;padding:14px 12px 12px 18px;border-bottom:1px solid var(--line)}
 .act-h h2{font-size:15px;font-weight:600}
-.state{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:var(--sunken);font-size:12px;color:var(--ink-2);white-space:nowrap}
+.state{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:var(--sunken);font-size:12.5px;color:var(--ink-2);white-space:nowrap}
 .state .dot{width:6px;height:6px;background:var(--brand)}
 .state.run{background:var(--brand-tint);color:var(--brand-strong)}
 .state.run .dot{animation:pulse 1s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.25}}
 .feed{flex:1;overflow:auto;padding:2px 10px 14px}
-.day{font-size:12px;font-weight:500;color:var(--muted);padding:14px 8px 4px}
+.day{font-size:12.5px;font-weight:500;color:var(--muted);padding:14px 8px 4px}
 .run{margin-bottom:2px}
 .run-h{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border-radius:10px;text-align:left}
 .run-h:hover{background:var(--hover)}
@@ -194,7 +194,7 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
 .run.fail .run-ic{background:var(--crit-tint);color:var(--crit)}
 .run.running .spin{width:11px;height:11px;border-width:1.75px}
 .run-t{flex:1;min-width:0;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.run-h time{font-size:12px;color:var(--muted)}
+.run-h time{font-size:12.5px;color:var(--muted)}
 .run-h .tw{width:14px;height:14px;color:var(--faint);transition:transform .15s}
 .run.open .tw{transform:rotate(90deg)}
 .run-m{font-size:12.5px;line-height:19px;color:var(--ink-2);padding:0 8px 4px 40px;margin-top:-5px}
@@ -204,7 +204,7 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
 @keyframes slide{from{left:-38%}to{left:100%}}
 .run-lines{display:none;margin:4px 8px 8px 40px;padding-left:12px;border-left:1px solid var(--line)}
 .run.open .run-lines{display:block}
-.line{display:flex;gap:10px;font-size:12px;line-height:19px;padding:1px 0;color:var(--ink-2);user-select:text}
+.line{display:flex;gap:10px;font-size:12.5px;line-height:19px;padding:1px 0;color:var(--ink-2);user-select:text}
 .line time{color:var(--muted);flex:none}
 .line.ok span{color:var(--ink)}
 .empty{display:grid;justify-items:center;gap:4px;text-align:center;padding:56px 24px;color:var(--muted);font-size:12.5px}
@@ -234,7 +234,7 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
 .input:hover{border-color:var(--faint)}
 .input:focus{border-color:var(--brand);box-shadow:var(--ring)}
 .input::placeholder{color:var(--faint)}
-.hint{font-size:12px;color:var(--muted)}
+.hint{font-size:12.5px;color:var(--muted)}
 .banner{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;background:var(--brand-tint);color:var(--brand-strong);font-size:13px}
 .banner .i{width:15px;height:15px;stroke-width:2.2}
 .divider{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
@@ -263,6 +263,7 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
 .btn.danger,.btn.danger:hover{color:var(--crit)}
 .btn.danger:hover{background:var(--crit-tint)}
 .path .ellipsis{flex:1}
+.s.bad{color:var(--crit)}
 
 /* 矮窗口（如 150% 缩放的 1080p 笔记本）收紧上下间距，不用滚动就能点到卡片底部的按钮 */
 @media (max-height:680px){
@@ -279,10 +280,16 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
   .act-h{padding-top:12px;padding-bottom:10px}
 }
 
-/* 窄窗口：运行记录收窄一点，日期那一行不折行 */
-@media (max-width:1060px){
-  .app{grid-template-columns:minmax(0,1fr) 292px}
-  .toasts{left:calc(20px + (100% - 348px)/2)}
+/* 窄窗口：运行记录收窄，卡片左右留白收紧，下面两张卡片的按钮和数字放得下 */
+@media (max-width:1100px){
+  .app{grid-template-columns:minmax(0,1fr) 272px}
+  .toasts{left:calc(20px + (100% - 328px)/2)}
+  .card-h,.card-b{padding-left:16px;padding-right:16px}
+  .card-f{padding-left:16px;padding-right:12px}
+  .stat,.kv>div{padding-left:10px;padding-right:10px}
+  .btn.sm{padding:0 9px}
+  .seg button{padding:0 10px}
+  .act-h{padding-left:16px}
 }
 </style>
 </head>
@@ -359,8 +366,8 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
         </header>
         <div class="card-b spread">
           <div class="kv">
-            <div><span class="k">下次运行</span><span class="v num" id="nextRun"></span></div>
-            <div><span class="k">上次运行</span><span class="v num" id="lastRun"></span></div>
+            <div><span class="k">下次运行</span><span class="v num" id="nextRun"></span><span class="s" id="nextRunSub"></span></div>
+            <div><span class="k">上次运行</span><span class="v num" id="lastRun"></span><span class="s" id="lastRunSub"></span></div>
           </div>
           <div class="inline">
             <div class="seg" id="freq" data-lock><button type="button" data-v="daily">每天</button><button type="button" data-v="weekly">每周</button></div>
@@ -390,7 +397,7 @@ body.busy [data-lock]{pointer-events:none;opacity:.45}
           <p class="meta" id="sumUpdated"></p>
         </div>
         <footer class="card-f">
-          <label class="sw-label" data-lock><button type="button" class="switch sm" id="sumAuto" role="switch" aria-label="导出后自动更新汇总"></button>导出后自动更新</label>
+          <label class="sw-label" data-lock title="导出扣款明细后自动更新汇总报告"><button type="button" class="switch sm" id="sumAuto" role="switch" aria-label="导出后自动更新汇总"></button><span class="ellipsis">导出后自动更新</span></label>
           <span class="spacer"></span>
           <button type="button" class="btn ghost sm" id="pickFiles" data-lock>选文件…</button>
           <button type="button" class="btn secondary sm" id="genSum" data-lock disabled>生成汇总</button>
@@ -677,7 +684,7 @@ function renderExport() {
   else run.append(icon("i-down"), "开始导出");
 }
 function scheduleText(s) {
-  return s.frequency === "daily" ? `每天 ${s.time} 导出前一天` : `每周${WEEKDAYS[s.weekday]} ${s.time} 导出前 7 天`;
+  return s.frequency === "daily" ? `每天 ${s.time}` : `每周${WEEKDAYS[s.weekday]} ${s.time}`;
 }
 function nextRun(s) {
   const now = new Date(), [h, m] = s.time.split(":").map(Number);
@@ -700,20 +707,32 @@ function renderSchedule() {
   else if (sc.enabled) head.replaceChildren(dot("ok"), `已启用 · ${scheduleText(sc)}`);
   else head.replaceChildren(dot(), "未启用");
 
-  const next = $("#nextRun");
+  const next = $("#nextRun"), nextSub = $("#nextRunSub");
   next.className = "v num";
-  if (!loading && sc.enabled) { const d = nextRun(sc); next.textContent = `${relDay(d)} ${hm(d)}`; }
-  else { next.textContent = "—"; next.classList.add("dim"); }
-  const last = $("#lastRun"), lastRun = S.runs.find(run => run.kind === "scheduled");
+  if (!loading && sc.enabled) {
+    const d = nextRun(sc);
+    next.textContent = `${relDay(d)} ${hm(d)}`;
+    nextSub.textContent = sc.frequency === "daily" ? "导出前一天" : "导出前 7 天";
+  } else {
+    next.textContent = "—"; next.classList.add("dim");
+    nextSub.textContent = loading ? "" : "启用后按时运行";
+  }
+  const last = $("#lastRun"), lastSub = $("#lastRunSub"), lastRun = S.runs.find(run => run.kind === "scheduled");
   last.className = "v num";
   if (lastRun) {
-    const when = parseTime(lastRun.end) || parseTime(lastRun.start);
+    const ok = lastRun.status === "ok", when = parseTime(lastRun.end) || parseTime(lastRun.start);
     const mark = document.createElement("span");
-    mark.className = lastRun.status === "ok" ? "okc" : "failc";
-    mark.title = lastRun.status === "ok" ? "成功" : lastRun.message;
-    mark.append(icon(lastRun.status === "ok" ? "i-check" : "i-x"));
+    mark.className = ok ? "okc" : "failc";
+    mark.title = ok ? "成功" : "失败";
+    mark.append(icon(ok ? "i-check" : "i-x"));
     last.replaceChildren(when ? `${relDay(when)} ${hm(when)}` : "—", mark);
-  } else { last.textContent = "—"; last.classList.add("dim"); }
+    lastSub.textContent = (lastRun.message || "").split(/[，。]/)[0] || (ok ? "成功" : "失败");   // 完整说明在提示和运行记录里
+    lastSub.title = lastRun.message || "";
+    lastSub.className = "s" + (ok ? "" : " bad");
+  } else {
+    last.textContent = "—"; last.classList.add("dim");
+    lastSub.textContent = "还没有运行过"; lastSub.title = ""; lastSub.className = "s";
+  }
 
   $$("#freq button").forEach(b => b.classList.toggle("on", b.dataset.v === f.frequency));
   if (document.activeElement !== $("#runAt")) $("#runAt").value = f.time;

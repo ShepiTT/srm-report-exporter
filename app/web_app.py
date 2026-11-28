@@ -31,7 +31,7 @@ from win_schedule import get_schedule, remove_schedule, set_schedule
 
 PAGE = Path(__file__).resolve().parent / "web" / "index.html"
 WINDOW_SIZE = (1120, 720)
-MIN_SIZE = (980, 620)
+MIN_SIZE = (1024, 640)
 BOOT_TIMEOUT = 15   # 页面这么久还没连上 Python，就关掉窗口改用旧界面
 POLL_WAIT = 15
 BUSY_TEXT = {"export": "导出", "summary": "生成汇总", "login": "浏览器登录", "settings": "保存设置"}
